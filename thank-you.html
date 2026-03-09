@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Creative Quarts — Thank You</title>
+  <meta name="description" content="Thank you — Creative Quarts / Divine Developers" />
+
+  <style>
+    :root{
+      --bg-light-start: #e9f7ff;
+      --bg-light-end: #f7fdff;
+      --card: rgba(255,255,255,0.9);
+      --text: #032027;
+      --muted: #4d6b6e;
+      --accent: #22c1c3;
+      --paper: #fff;
+      --trail: rgba(0,0,0,0.12);
+    }
+
+    /* Dark mode tokens */
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg-light-start: #07121a;
+        --bg-light-end: #071826;
+        --card: rgba(4,8,12,0.6);
+        --text: #e6f7f6;
+        --muted: #9fbfc0;
+        --accent: #2be2d9;
+        --paper: #111;
+        --trail: rgba(255,255,255,0.08);
+      }
+    }
+
+    /* page reset */
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:var(--text)}
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background:
+        radial-gradient(800px 360px at 12% 12%, rgba(34,193,195,0.06), transparent),
+        linear-gradient(180deg,var(--bg-light-start),var(--bg-light-end));
+      overflow:hidden;
+    }
+
+    /* container */
+    .card {
+      width: min(980px, 94%);
+      background: var(--card);
+      border-radius: 18px;
+      padding: 44px;
+      box-shadow: 0 30px 80px rgba(3,10,18,0.08);
+      position: relative;
+      overflow: visible;
+      text-align: center;
+      z-index: 6;
+      backdrop-filter: blur(6px) saturate(1.04);
+    }
+
+    .brand-line {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .brand-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 6px 20px rgba(34,193,195,0.12)}
+    h1{
+      margin:6px 0 6px;
+      font-size: clamp(26px, 4.6vw, 40px);
+      letter-spacing:-0.6px;
+      font-weight:800;
+    }
+    p.lead{
+      margin:0 0 18px;color:var(--muted);font-size:17px;
+    }
+
+    .btn-row{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:12px}
+    .btn{
+      padding:10px 14px;border-radius:10px;font-weight:700;text-decoration:none;background:linear-gradient(90deg,var(--accent), #6ee7b7);color:#04202a;border:0;
+    }
+    .small{display:block;margin-top:10px;color:var(--muted);font-size:13px}
+
+    /* top-right controls */
+    .top-controls{
+      position:absolute; right:18px; top:18px; display:flex; gap:10px; z-index:20;
+    }
+    .mode-toggle{
+      background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:10px;cursor:pointer;font-weight:700;
+    }
+
+    /* SKY / PLANE + TRAIL */
+    .sky {
+      position: absolute; inset:0; pointer-events:none; z-index:2;
+    }
+
+    /* dashed trail path (SVG stroke) */
+    .trail-path {
+      stroke: var(--trail);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-dasharray: 14 8;
+      stroke-dashoffset: 0;
+      opacity: 0.95;
+      filter: blur(0.12px);
+      will-change: stroke-dashoffset;
+    }
+    /* animate dash offset to create moving trail effect */
+    .trail-anim {
+      animation: dashMove 4s linear infinite;
+    }
+    @keyframes dashMove {
+      to { stroke-dashoffset: -44; }
+    }
+
+    /* paper scraps that drift out from the plane */
+    .paper {
+      position: absolute;
+      width: 14px; height: 10px;
+      background: var(--paper);
+      transform-origin: center;
+      border-radius: 2px;
+      box-shadow: 0 6px 18px rgba(3,10,18,0.06);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    /* variations — sizes */
+    .paper.p1{width:12px;height:8px}
+    .paper.p2{width:14px;height:10px}
+    .paper.p3{width:10px;height:7px}
+
+    /* animate paper scraps along approximate path — different delays for natural effect */
+    @keyframes paperTrail1 {
+      0% { transform: translate(calc(-8vw), 0) rotate(-6deg) scale(.9); opacity:1; }
+      40% { opacity:1; }
+      100% { transform: translate(68vw, -18vh) rotate(36deg) scale(.6); opacity:0; }
+    }
+    @keyframes paperTrail2 {
+      0% { transform: translate(calc(-9vw), 0) rotate(-2deg) scale(.95); opacity:1; }
+      40% { opacity:1; }
+      100% { transform: translate(62vw, -10vh) rotate(18deg) scale(.7); opacity:0; }
+    }
+    @keyframes paperTrail3 {
+      0% { transform: translate(calc(-10vw), 0) rotate(0deg) scale(0.85); opacity:1; }
+      45% { opacity:1; }
+      100% { transform: translate(76vw, -26vh) rotate(54deg) scale(.55); opacity:0; }
+    }
+
+    /* plane */
+    .plane {
+      width:72px;height:72px;
+      position:absolute;
+      left:-12%;
+      bottom:8%;
+      transform-origin:center;
+      z-index:10;
+      filter: drop-shadow(0 12px 30px rgba(3,10,18,0.08));
+    }
+
+    /* looping flight — infinite */
+    .plane.fly {
+      animation: flyPath 4s cubic-bezier(.22,.9,.28,1) infinite;
+    }
+    @keyframes flyPath {
+      0%   { transform: translate(0,0) rotate(-10deg) scale(.98); opacity:0; left:-12%; bottom:8%; }
+      6%   { opacity:1; }
+      25%  { transform: translate(22vw, -14vh) rotate(6deg) scale(1.03); }
+      50%  { transform: translate(44vw, -30vh) rotate(18deg) scale(1.06); }
+      75%  { transform: translate(72vw, -18vh) rotate(6deg) scale(1.02); }
+      95%  { transform: translate(98vw, -4vh) rotate(-6deg) scale(.9); opacity:1; }
+      100% { transform: translate(140vw, 10vh) rotate(-14deg) scale(.85); opacity:0; left:140%; }
+    }
+
+    /* responsive tweaks */
+    @media (max-width:720px){
+      .card{padding:22px}
+      .plane{width:56px;height:56px;bottom:6%}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="thanks-title">
+    <div class="top-controls">
+      <button class="mode-toggle" id="toggleMode" title="Toggle dark/light">Toggle mode</button>
+    </div>
+
+    <div class="brand-line"><span class="brand-dot" aria-hidden="true"></span><small style="color:var(--muted);font-weight:700">Creative Quarts</small></div>
+    <h1 id="thanks-title">Divine Devs — Thank you!</h1>
+    <p class="lead">Your creative spark has landed with us. We’ll shape it into something remarkable — thanks for sharing your vision.</p>
+
+    <div class="btn-row">
+      <a class="btn" href="/" aria-label="Go back to home">Back to home</a>
+      <a class="btn" href="mailto:divinedevelopers006@gmail.com" aria-label="Send an email">Send another</a>
+    </div>
+
+    <span class="small">You can close this tab or enjoy the little flight. ✈️</span>
+  </div>
+
+  <!-- SKY: SVG trail + Plane + paper scraps -->
+  <div class="sky" aria-hidden="true">
+    <svg viewBox="0 0 1200 400" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;">
+      <!-- approximate curved path from left-bottom toward top-right -->
+      <path id="flightPath" d="M120 300 C 260 230, 460 120, 640 60 C 820 12, 980 36, 1140 80"
+            class="trail-path trail-anim"></path>
+    </svg>
+
+    <!-- plane SVG (black) -->
+    <svg id="plane" class="plane" viewBox="0 0 64 64" role="img" aria-hidden="true">
+      <polygon points="2,30 62,6 42,30 62,58" fill="#000000"></polygon>
+      <polygon points="2,30 28,34 38,28" fill="#222"></polygon>
+    </svg>
+
+    <!-- paper scraps (absolute elements animated with CSS) -->
+    <div class="paper p1" id="paper1" style="left:6%; bottom:18%;"></div>
+    <div class="paper p2" id="paper2" style="left:4%; bottom:16%;"></div>
+    <div class="paper p3" id="paper3" style="left:2%; bottom:19%;"></div>
+  </div>
+
+  <script>
+    // Start plane & trails, create staggered paper animations
+    (function(){
+      const plane = document.getElementById('plane');
+      const p1 = document.getElementById('paper1');
+      const p2 = document.getElementById('paper2');
+      const p3 = document.getElementById('paper3');
+
+      // start looping flight (CSS handles infinite)
+      requestAnimationFrame(()=> plane.classList.add('fly'));
+
+      // animate papers periodically to simulate trailing scraps
+      function animatePapers(){
+        // trigger animations by setting animation names & delays
+        p1.style.animation = 'paperTrail1 1600ms cubic-bezier(.22,.9,.28,1) forwards';
+        p2.style.animation = 'paperTrail2 1800ms cubic-bezier(.22,.9,.28,1) forwards';
+        p3.style.animation = 'paperTrail3 2000ms cubic-bezier(.22,.9,.28,1) forwards';
+
+        // clear them so we can replay later
+        setTimeout(()=>{
+          p1.style.animation = '';
+          p2.style.animation = '';
+          p3.style.animation = '';
+        }, 2400);
+      }
+
+      // Start first burst shortly after load, then repeat in sync with plane loop.
+      setTimeout(animatePapers, 220); // initial
+      const loopInterval = 4000; // matches plane loop duration
+      setInterval(animatePapers, loopInterval);
+
+      // Mode toggle (manual override)
+      const toggle = document.getElementById('toggleMode');
+      toggle.addEventListener('click', ()=> {
+        // simple theme toggle: add a data-theme attribute to documentElement
+        if(document.documentElement.hasAttribute('data-theme')){
+          document.documentElement.removeAttribute('data-theme');
+        } else {
+          document.documentElement.setAttribute('data-theme','dark');
+        }
+        // persist preference
+        try{ localStorage.setItem('cq-theme', document.documentElement.getAttribute('data-theme') || ''); }catch(e){}
+      });
+
+      // Respect stored preference on load (optional)
+      try{
+        const stored = localStorage.getItem('cq-theme');
+        if(stored === 'dark') document.documentElement.setAttribute('data-theme','dark');
+      }catch(e){}
+    })();
+  </script>
+</body>
+</html>
