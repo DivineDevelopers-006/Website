@@ -774,6 +774,7 @@
         aria-atomic="false"
       ></section>
       <div class="min-h-screen flex flex-col relative" >
+
         <header class="sticky top-0 z-50 glass-elevated border-b border-border/20">
           <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -859,6 +860,7 @@
             </div>
           </div>
         </header>
+        
         <main class="flex-1">
           <div class="overflow-hidden relative">
             <div class="cyber-cursor" style="left: 1020px; top: 318px"></div>
@@ -2911,6 +2913,38 @@
         });
         }
         </script>
+
+    <!-- Starry Mouse Trail Effect -->
+    <script>
+      document.addEventListener("mousemove", e => {
+
+      let star = document.createElement("div");
+
+      star.style.position="fixed";
+      star.style.width="4px";
+      star.style.height="4px";
+      star.style.background="white";
+      star.style.borderRadius="50%";
+      star.style.pointerEvents="none";
+      star.style.boxShadow="0 0 10px cyan,0 0 20px purple";
+
+      star.style.left=e.clientX+"px";
+      star.style.top=e.clientY+"px";
+
+      document.body.appendChild(star);
+
+      setTimeout(()=>{
+      star.style.opacity="0";
+      star.style.transform="scale(2)";
+      star.style.transition="0.6s";
+      },10);
+
+      setTimeout(()=>{
+      star.remove();
+      },600);
+
+      });
+    </script>
     <!-- Correct Vite Entry Point -->
   </body>
 </html>
